@@ -30,7 +30,7 @@ LazySource::usage = "A lazy list generator that takes a source such as Prime[] o
 
 Begin["`Private`"];
 
-Unprotect[LazyList,EmptyQ]
+Unprotect[Lazy,LazyList,EmptyQ,LazySource]
 
 SetAttributes[LazyList, {HoldAll}]
 
@@ -80,7 +80,7 @@ LazyList[lst_List] := LazyList[Evaluate[First[lst]],LazyList[Evaluate[Rest[lst]]
 LazyList[f_] := LazySource[f,1]
 LazySource[f_, n_:1] := With[{nn = n + 1}, LazyList[f[n], LazySource[f, nn]]]
 
-Protect[LazyList,EmptyQ]
+Protect[Lazy,LazyList,EmptyQ,LazySource]
 
 End[]
 
