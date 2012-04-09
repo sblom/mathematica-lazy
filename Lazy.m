@@ -78,7 +78,15 @@ LazyList[{}] := LazyList[]
 LazyList[lst_List] := LazyList[Evaluate[First[lst]],LazyList[Evaluate[Rest[lst]]]]
 
 LazyList[f_] := LazySource[f,1]
-LazySource[f_, n_:1] := With[{nn = n + 1}, LazyList[f[n], LazySource[f, nn]]]
+LazySource[f_, n_:1] := With[{nn = n + 1}, LazyList[Evaluate[f[n]], LazySource[f, nn]]]
+
+Lazy[Primes] := LazySource[Prime,1]
+Lazy[Integers] := LazySource[#&,1]
+Lazy[lst_List] := LazyList[Evaluate[First[lst]],LazyList[Evaluate[Rest[lst]]]]
+
+(*This one doesn't work very well yet.*)
+Lazy[instream_InputStream] := LazyList[Evaluate[Read[instream,String]],Lazy[instream]]
+LazyList[EndOfFile,_] := LazyList[]
 
 Protect[Lazy,LazyList,EmptyQ,LazySource]
 
