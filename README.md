@@ -34,11 +34,25 @@ Happy hacking!
 
 Examples
 ========
-Project Euler #1: Find the sum of all the multiples of 3 or 5 below 1000.
+*Project Euler #1: Find the sum of all the multiples of 3 or 5 below 1000.*
 
->Total[Lazy[Integers]~TakeWhile~((# < 1000) &)
->  ~Select~((Mod[#, 3] == 0 || Mod[#, 5] == 0) &)]
+```
+Total[Lazy[Integers]~TakeWhile~((# < 1000) &)
+  ~Select~((Mod[#, 3] == 0 || Mod[#, 5] == 0) &)]
+```
 
+*Project Euler #12: What is the value of the first triangle number to have over five hundred divisors?*
+```
+(* First, a non-lazy helper *)
+divisorsLength[n_] := Apply[Times, #[[2]] + 1 & /@ FactorInteger[n]];
+
+(* Then a lazy definition of the (infinite) list of all Triangular numbers. *)
+triangles = FoldList[Plus, 0, Lazy[Integers]];
+
+(* Filter that list down to just the ones with more than 500 divisors and take the first element. *)
+triangles ~Select~ (divisorsLength[#] > 500 &) // First
+
+```
 
 
   [1]: http://mathematica.stackexchange.com/a/885/178
