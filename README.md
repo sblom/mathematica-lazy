@@ -42,6 +42,7 @@ Total[Lazy[Integers]~TakeWhile~((# < 1000) &)
 ```
 
 *Project Euler #12: What is the value of the first triangle number to have over five hundred divisors?*
+
 ```
 (* First, a non-lazy helper *)
 divisorsLength[n_] := Apply[Times, #[[2]] + 1 & /@ FactorInteger[n]];
