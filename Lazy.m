@@ -74,15 +74,17 @@ LazyList/:FoldList[_,_,LazyList[]] := LazyList[]
 LazyList/:FoldList[fun_,x0_,z0_LazyList] :=
   fun[x0,First[z0]]/.x1_:>LazyList[x1,FoldList[fun,x1,Rest[z0]]]
 
+LazyList/:Total[z_LazyList] := Fold[Plus,0,z]
+
 LazyList[{}] := LazyList[]
 LazyList[lst_List] := LazyList[Evaluate[First[lst]],LazyList[Evaluate[Rest[lst]]]]
 
-LazyList[f_] := LazySource[f,1]
 LazySource[f_, n_:1] := With[{nn = n + 1}, LazyList[Evaluate[f[n]], LazySource[f, nn]]]
 
 Lazy[Primes] := LazySource[Prime,1]
 Lazy[Integers] := LazySource[#&,1]
 Lazy[lst_List] := LazyList[Evaluate[First[lst]],LazyList[Evaluate[Rest[lst]]]]
+LazyList[f_] := LazySource[f,1]
 
 (*This one doesn't work very well yet.*)
 Lazy[instream_InputStream] := LazyList[Evaluate[Read[instream,String]],Lazy[instream]]
