@@ -75,16 +75,23 @@ LazyList/:FoldList[fun_,x0_,z0_LazyList] :=
   fun[x0,First[z0]]/.x1_:>LazyList[x1,FoldList[fun,x1,Rest[z0]]]
 
 LazyList/:Total[z_LazyList] := Fold[Plus,0,z]
+LazyList/:Max[z_LazyList] := Fold[Max,-Infinity,z]
+LazyList/:Min[z_LazyList] := Fold[Min,Infinity,z]
+
+LazyList/:Pick[z_LazyList,p:(_List|_LazyList)] := NotYetImplemented
+(* TODO: Need the form of pick that takes a pattern as arg3 *)
 
 LazyList[{}] := LazyList[]
 LazyList[lst_List] := LazyList[Evaluate[First[lst]],LazyList[Evaluate[Rest[lst]]]]
 
 LazySource[f_, n_:1] := With[{nn = n + 1}, LazyList[Evaluate[f[n]], LazySource[f, nn]]]
+LazySource[init_, step_, extract_]:=
+ LazyList[Evaluate[init /. extract],
+  LazySource[init /. step, step, extract]]
 
 Lazy[Primes] := LazySource[Prime,1]
 Lazy[Integers] := LazySource[#&,1]
 Lazy[lst_List] := LazyList[Evaluate[First[lst]],LazyList[Evaluate[Rest[lst]]]]
-LazyList[f_] := LazySource[f,1]
 
 (*This one doesn't work very well yet.*)
 Lazy[instream_InputStream] := LazyList[Evaluate[Read[instream,String]],Lazy[instream]]
